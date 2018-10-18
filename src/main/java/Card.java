@@ -1,60 +1,45 @@
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public class Card {
-
     String cardCode;
+    List<String> validSuits = Arrays.asList("S","C","D","H");
+    HashMap<String, Integer> figuredCardValues = new HashMap<>();
+    int intCardValue;
+    String cardSuit;
+    String cardValue;
+
 
     public Card(String cardCode) throws IllegalArgumentException {
         this.cardCode = cardCode;
+        cardSuit = this.cardCode.substring(0, 1).toUpperCase();
+        cardValue = cardCode.substring(1);
 
-        String cardColor = this.cardCode.substring(0, 1).toUpperCase();
+        figuredCardValues.put("J", 11);
+        figuredCardValues.put("Q", 12);
+        figuredCardValues.put("K", 13);
+        figuredCardValues.put("A", 14);
 
-        if (!cardColor.contentEquals("S") &&
-            !cardColor.contentEquals("C") &&
-            !cardColor.contentEquals("D") &&
-            !cardColor.contentEquals("H"))
-        {
-            throw new IllegalArgumentException("card color isn't valid: " + cardColor);
-        }
 
-        String cardValue = cardCode.substring(1).toUpperCase();
-        Integer intCardValue;
-
-        HashMap<String, Integer> alphabeticCardValue = new HashMap<>();
-        alphabeticCardValue.put("J", 11);
-        alphabeticCardValue.put("Q", 12);
-        alphabeticCardValue.put("K", 13);
-        alphabeticCardValue.put("A", 14);
-
-        if (alphabeticCardValue.get(cardCode.substring(1).toUpperCase()) == null) {
-            // raises exception if cardValue is a letter, but not J/Q/K/A
-            intCardValue = Integer.parseInt(cardValue);
-            if (intCardValue > 10) {
-                throw new IllegalArgumentException("card number isn't valid: " + intCardValue);
+        if(validSuits.contains(cardSuit)){
+            if (figuredCardValues.get(cardValue) == null) {
+                intCardValue = Integer.parseInt(cardValue);
+                if (intCardValue > 10 || intCardValue < 2) {
+                    throw new IllegalArgumentException("card number isn't valid: " + intCardValue);
+                }
             }
-            if (intCardValue < 2) {
-                throw new IllegalArgumentException("card number isn't valid: " + intCardValue);
-            }
+        } else throw new IllegalArgumentException("card color isn't valid: " + cardSuit);
 
-        }
     }
 
+
     public int getValue() {
-        HashMap<String, Integer> alphabeticCardValue = new HashMap<>();
-        alphabeticCardValue.put("J", 11);
-        alphabeticCardValue.put("Q", 12);
-        alphabeticCardValue.put("K", 13);
-        alphabeticCardValue.put("A", 14);
-
-        String cardValue = cardCode.substring(1).toUpperCase();
-        Integer intCardValue;
-
-        if (alphabeticCardValue.get(cardCode.substring(1).toUpperCase()) == null) {
+        if (figuredCardValues.get(cardValue) == null) {
             intCardValue = Integer.parseInt(cardValue);
         } else {
-            intCardValue = alphabeticCardValue.get(cardCode.substring(1).toUpperCase());
+            intCardValue = figuredCardValues.get(cardValue);
         }
-
         return intCardValue;
     }
 }
